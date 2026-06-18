@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhoTookThis | Unfiltered Entertainment Intel</title>
+  <!-- Tailwind CSS for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome for social icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Netlify Identity Widget for Admin Login -->
+  <script src="https://identity.netlify.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: marquee 25s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+    .emerald-glow {
+      box-shadow: 0 0 15px rgba(113, 130, 106, 0.2);
+    }
+    .emerald-glow-focus:hover {
+      box-shadow: 0 0 25px rgba(113, 130, 106, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-[#0f0f11] text-gray-100 font-sans min-h-screen flex flex-col">
+
+  <!-- 1. WT-ALERT MARQUEE TICKER -->
+  <div class="bg-black border-b border-[#71826a]/30 py-2 overflow-hidden position-relative z-50">
+    <div class="flex whitespace-nowrap animate-marquee">
+      <!-- Loop content twice for seamless infinite scrolling -->
+      <div class="flex space-x-12 px-4">
+        <span class="flex items-center text-sm font-bold tracking-wider text-[#71826a]"><span class="bg-[#71826a] text-black text-xs px-1.5 py-0.5 rounded mr-2 font-black">WT-ALERT</span> INSIDER: The Batman Part 2 script modifications nearing final lock...</span>
+        <span class="flex items-center text-sm font-bold tracking-wider text-gray-400"><span class="bg-gray-700 text-white text-xs px-1.5 py-0.5 rounded mr-2 font-black">BOX OFFICE</span> Obsession crushing weekend tracking projections...</span>
+        <span class="flex items-center text-sm font-bold tracking-wider text-[#71826a]"><span class="bg-[#71826a] text-black text-xs px-1.5 py-0.5 rounded mr-2 font-black">WT-ALERT</span> CASTING: New frontrunners emerging for Secret DCU cosmic roles...</span>
+        <span class="flex items-center text-sm font-bold tracking-wider text-gray-400"><span class="bg-gray-700 text-white text-xs px-1.5 py-0.5 rounded mr-2 font-black">REVIEW</span> Toy Story 5 first story treatments spark heavy internal hype...</span>
+      </div>
+      <div class="flex space-x-12 px-4">
+        <span class="flex items-center text-sm font-bold tracking-wider text-[#71826a]"><span class="bg-[#71826a] text-black text-xs px-1.5 py-0.5 rounded mr-2 font-black">WT-ALERT</span> INSIDER: The Batman Part 2 script modifications nearing final lock...</span>
+        <span class="flex items-center text-sm font-bold tracking-wider text-gray-400"><span class="bg-gray-700 text-white text-xs px-1.5 py-0.5 rounded mr-2 font-black">BOX OFFICE</span> Obsession crushing weekend tracking projections...</span>
+        <span class="flex items-center text-sm font-bold tracking-wider text-[#71826a]"><span class="bg-[#71826a] text-black text-xs px-1.5 py-0.5 rounded mr-2 font-black">WT-ALERT</span> CASTING: New frontrunners emerging for Secret DCU cosmic roles...</span>
+        <span class="flex items-center text-sm font-bold tracking-wider text-gray-400"><span class="bg-gray-700 text-white text-xs px-1.5 py-0.5 rounded mr-2 font-black">REVIEW</span> Toy Story 5 first story treatments spark heavy internal hype...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. NAVIGATION HEADER -->
+  <header class="bg-[#141418] border-b border-gray-800 sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="#" id="nav-logo" class="text-xl font-black tracking-tighter text-white flex items-center space-x-1">
+        <span>WHO</span><span class="text-[#71826a]">TOOK</span><span>THIS</span>
+      </a>
+      
+      <!-- Nav Categories -->
+      <nav class="hidden md:flex space-x-1 font-bold text-sm text-gray-400">
+        <button onclick="filterCategory('All')" class="nav-btn px-3 py-2 rounded text-white bg-[#1a1a22]">All</button>
+        <button onclick="filterCategory('News')" class="nav-btn px-3 py-2 rounded hover:text-white transition">News</button>
+        <button onclick="filterCategory('Movie Reviews')" class="nav-btn px-3 py-2 rounded hover:text-white transition">Movie Reviews</button>
+        <button onclick="filterCategory('Podcast Clips')" class="nav-btn px-3 py-2 rounded hover:text-white transition">Podcast Clips</button>
+        <button onclick="filterCategory('Rumors')" class="nav-btn px-3 py-2 rounded hover:text-white transition">Rumors</button>
+      </nav>
+
+      <!-- Social Links -->
+      <div class="flex items-center space-x-4 text-gray-400">
+        <a href="#" class="hover:text-white transition text-lg"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="hover:text-white transition text-lg"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="hover:text-white transition text-lg"><i class="fab fa-x-twitter"></i></a>
+        <button onclick="scrollToCrew()" class="bg-[#71826a] text-black text-xs px-3 py-1.5 rounded-md font-black hover:bg-[#829479] transition hidden sm:inline-block">JOIN CREW</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8">
+    
+    <!-- GRID VIEW INTERFACE -->
+    <div id="grid-view" class="space-y-8">
+      <!-- Dynamic Title -->
+      <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+        <h2 id="category-title" class="text-xs tracking-widest font-black text-[#71826a] uppercase">LATEST DROP STREAM</h2>
+        <span class="text-xs text-gray-500 font-medium" id="item-count">3 Drops Available</span>
+      </div>
+
+      <!-- Feed Grid Layout (Asymmetric Base Emulation) -->
+      <div id="articles-container" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Articles will be automatically injected here dynamically -->
+      </div>
+    </div>
+
+    <!-- DETAIL VIEW READER INTERFACE (Hidden by Default) -->
+    <div id="detail-view" class="hidden max-w-3xl mx-auto space-y-6 pt-4">
+      <button onclick="showGridView()" class="text-xs font-bold text-gray-400 hover:text-[#71826a] transition flex items-center space-x-2">
+        <i class="fas fa-arrow-left"></i> <span>BACK TO FEED</span>
+      </button>
+
+      <div class="space-y-3">
+        <div class="flex items-center space-x-3 text-xs">
+          <span id="detail-category" class="bg-[#71826a] text-black px-2 py-0.5 font-black uppercase rounded">CATEGORY</span>
+          <span id="detail-date" class="text-gray-500">June 18, 2026</span>
+          <a id="detail-source" href="#" target="_blank" class="text-[#71826a] hover:underline font-bold hidden"><i class="fas fa-external-link-alt mr-1"></i>Via Source</a>
+        </div>
+        <h1 id="detail-title" class="text-3xl sm:text-4xl font-black tracking-tight leading-tight text-white">Article Headline</h1>
+      </div>
+
+      <img id="detail-image" src="" alt="Featured Image" class="w-full aspect-video object-cover rounded-lg border border-gray-800 emerald-glow">
+
+      <!-- Barstool-style Punchy Content Body -->
+      <div class="space-y-6 text-gray-300 leading-relaxed text-base">
+        <!-- Custom WT Highlight Block -->
+        <div class="bg-[#141418] border-l-4 border-[#71826a] p-4 rounded-r-lg">
+          <h4 class="text-xs font-black text-[#71826a] tracking-wider uppercase mb-1">WT TAKE</h4>
+          <p id="detail-wt-take" class="font-bold text-white italic text-base">"Raw Take Placeholder"</p>
+        </div>
+
+        <!-- Dynamic Bullet Lists for Skimmers -->
+        <ul id="detail-bullets" class="space-y-3 bg-[#18181f] p-5 rounded-lg border border-gray-800 text-sm font-medium">
+          <!-- Bullets Injected Here -->
+        </ul>
+
+        <!-- Long-form details -->
+        <div id="detail-body-text" class="space-y-4 font-normal">
+          <!-- Text Paragraphs Injected Here -->
+        </div>
+      </div>
+      
+      <!-- Bottom Interaction / Reactions -->
+      <div class="border-t border-gray-800 pt-6 flex justify-between items-center text-sm text-gray-500">
+        <span>Was this scoop accurate?</span>
+        <div class="flex space-x-4">
+          <button onclick="alert('Vote counted!')" class="hover:text-[#71826a] transition flex items-center space-x-2 font-bold"><i class="far fa-thumbs-up text-base"></i> <span>REAL</span></button>
+          <button onclick="alert('Vote counted!')" class="hover:text-red-500 transition flex items-center space-x-2 font-bold"><i class="far fa-thumbs-down text-base"></i> <span>CAP</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DISCORD RECRUITMENT PORTAL -->
+    <section id="crew-section" class="mt-20 bg-[#141418] border border-gray-800 rounded-xl p-6 sm:p-8 max-w-4xl mx-auto emerald-glow text-center sm:text-left">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
+        <div class="sm:col-span-2 space-y-3">
+          <span class="bg-[#71826a]/10 text-[#71826a] text-xs font-black px-2.5 py-1 rounded-full tracking-wider uppercase">Now Recruiting Writers</span>
+          <h3 class="text-2xl font-black text-white tracking-tight">Raised by WhoTookThis? Join the Crew.</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            If you're hanging out in the Escape Pod or DC Discords, obsessing over raw movie leaks, and want to put out short, hilarious, punchy blogs for the next gen of film fans—we want you. No clean portfolios required. Just real passion.
+          </p>
+        </div>
+        <div class="flex justify-center sm:justify-end">
+          <button onclick="openApplication()" class="w-full sm:w-auto bg-[#71826a] text-black font-black px-6 py-3 rounded-lg hover:bg-[#829479] transition tracking-tight text-sm">SUBMIT APPLICATION</button>
+        </div>
+      </div>
+
+      <!-- Simple Interactive Application Modal Overlay Simulation -->
+      <div id="app-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 animate-fade-in">
+        <div class="bg-[#141418] border border-gray-800 max-w-md w-full rounded-xl p-6 space-y-4">
+          <div class="flex justify-between items-center">
+            <h4 class="font-black text-lg text-white">Apply to WhoTookThis</h4>
+            <button onclick="closeApplication()" class="text-gray-500 hover:text-white"><i class="fas fa-times"></i></button>
+          </div>
+          <form onsubmit="submitApp(event)" class="space-y-3 text-left">
+            <div>
+              <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Discord Tag / Handle</label>
+              <input type="text" required placeholder="e.g., MovieBuff#1234" class="w-full bg-black border border-gray-800 rounded p-2 text-sm focus:border-[#71826a] outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Favorite Film Community / Server</label>
+              <input type="text" placeholder="e.g., The Escape Podcast Discord" class="w-full bg-black border border-gray-800 rounded p-2 text-sm focus:border-[#71826a] outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Your 2-Sentence Unfiltered Take on Any Movie</label>
+              <textarea required rows="3" placeholder="Make it raw, fast, and Barstool-style." class="w-full bg-black border border-gray-800 rounded p-2 text-sm focus:border-[#71826a] outline-none"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-[#71826a] text-black font-black py-2.5 rounded hover:bg-[#829479] transition text-sm">SEND TO WHOTOOKTHIS</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-black border-t border-gray-900 mt-20 py-6 text-center text-xs text-gray-600">
+    <p>&copy; 2026 WhoTookThis Media Brand. Unfiltered Cinema Ecosystem.</p>
+  </footer>
+
+  <!-- DYNAMIC CONTENT SCRIPT ENGINE -->
+  <script>
+    // Mocking the Data Structure coming directly from Decap CMS JSON/Markdown files
+    const blogDatabase = [
+      {
+        id: "1",
+        title: "Why Obsession is dominating the Box Office",
+        category: "Movie Reviews",
+        image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800",
+        date: "June 18, 2026",
+        source: "Variety",
+        sourceUrl: "https://variety.com",
+        excerpt: "No one predicted this micro-budget psychological horror thriller would clean house, but word-of-mouth on TikTok is completely undefeated.",
+        wtTake: "Traditional studio tracking models are completely dead. If you hook a 19-year-old on TikTok with a wild sound bite or an insane twist clip, they will show up to theaters in droves. Obsession is phenomenal, chaotic filmmaking.",
+        bulletPoints: [
+          "Beats out major studio tentpoles with a tiny $4.5M production budget.",
+          "Viral 'Don't Look Away' trends on short-form social media generated instant free marketing.",
+          "Targeting audiences who want fast-paced, unpredictable theater trips rather than 3-hour blockbusters."
+        ],
+        bodyText: "The theatrical landscape just took a massive reality check. While massive franchises struggle to make back their astronomical VFX budgets, a lean, mean, tension-fueled ride called Obsession just locked down the number one spot at the box office. The secret sauce? Pure audience obsession. It wasn't built on legacy intellectual property or massive billboard campaigns. Instead, the directors targeted exact behavioral triggers that make things move on phone screens—unsettling cinematography, sound loops that demand reactions, and a final third that leaves you looking around the theater. It's fast, funny, and terrifying."
+      },
+      {
+        id: "2",
+        title: "Insider Rumours Surrounding The Batman Part 2",
+        category: "Rumors",
+        image: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?auto=format&fit=crop&q=80&w=800",
+        date: "June 15, 2026",
+        source: "The Hollywood Reporter",
+        sourceUrl: "https://hollywoodreporter.com",
+        excerpt: "Production leaks indicate Matt Reeves is cooking an incredibly grounded detective noir that shifts heavy emphasis onto Gotham's lower-tier underworld clans.",
+        wtTake: "Give me all of this right now. We don't need world-ending lasers; we need Robert Pattinson tracking cryptic clues through rain-soaked Gotham alleyways like a true unhinged detective. Keep it gritty, keep it raw.",
+        bulletPoints: [
+          "Script tweaks focus heavily on developing the corrupt political voids left after the flood.",
+          "Rumored villain tracks lean closer to street-level psychological rogues rather than theatrical supers.",
+          "Cinematography styles plan to push low-light digital film techniques to extreme limits."
+        ],
+        bodyText: "Rumors out of the production office hint that the sequel's script is undergoing a massive tightening phase to trim fat and amplify the raw, dirty crime-noir elements that made the original standalone standout. Insiders state that instead of escalating to giant comic-book tropes, the script dives face-first into the chaotic turf wars tearing Gotham's families apart. Expect heavy psychological pacing, gritty set pieces, and an absolute masterclass in atmosphere."
+      },
+      {
+        id: "3",
+        title: "Toy Story 5: Review",
+        category: "Movie Reviews",
+        image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=800",
+        date: "June 10, 2026",
+        source: "Deadline",
+        sourceUrl: "https://deadline.com",
+        excerpt: "Can Pixar recapture the pure cinematic magic for a fifth round, or are we staring down corporate fatigue?",
+        wtTake: "Look, we all said Toy Story 4 was unnecessary, and then it ripped our hearts out anyway. If Pixar has an organic angle to look at how tech alters childhood play dynamics, I'm seated. Don't bet against the toys.",
+        bulletPoints: [
+          "Deals with modern childhood moving away from physical plastic to digital twin simulations.",
+          "Classic voice cast anchors the emotional weight beautifully.",
+          "Visual animation standards are reportedly pushing photorealism benchmarks."
+        ],
+        bodyText: "Walking into a fifth installment of an iconic franchise always comes with heavy skepticism. Is it a cash grab, or is there a genuine narrative reason to reopen the toy box? Thankfully, the creative teams focused directly on a modern struggle: how physical toys survive in a world ruled by smart devices and instant screens. It's funny, deeply self-aware, and packs that classic third-act punch that will make grown adults weep in public."
+      }
+    ];
+
+    let currentCategory = "All";
+
+    // Inject and filter grid items
+    function renderGrid(filter = "All") {
+      const container = document.getElementById("articles-container");
+      container.innerHTML = "";
+      
+      const filtered = filter === "All" ? blogDatabase : blogDatabase.filter(p => p.category === filter);
+      document.getElementById("item-count").innerText = `${filtered.length} Drop${filtered.length === 1 ? '' : 's'} Available`;
+
+      filtered.forEach((post, idx) => {
+        const isMainFeature = filter === "All" && idx === 0;
+        
+        const card = document.createElement("div");
+        card.className = `bg-[#141418] border border-gray-800 rounded-lg overflow-hidden cursor-pointer emerald-glow-focus transition-all duration-300 flex flex-col justify-between ${isMainFeature ? 'lg:col-span-2' : ''}`;
+        card.setAttribute("onclick", `showDetailView("${post.id}")`);
+
+        card.innerHTML = `
+          <div>
+            <div class="relative aspect-video w-full overflow-hidden bg-gray-900">
+              <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+              <span class="absolute top-3 left-3 bg-[#71826a] text-black text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">${post.category}</span>
+            </div>
+            <div class="p-5 space-y-2">
+              <div class="text-[11px] font-bold text-gray-500 flex items-center space-x-2">
+                <span>${post.date}</span>
+                <span>&bull;</span>
+                <span class="text-gray-400">Via ${post.source}</span>
+              </div>
+              <h3 class="${isMainFeature ? 'text-2xl lg:text-3xl' : 'text-lg'} font-black text-white tracking-tight leading-tight hover:text-[#71826a] transition">${post.title}</h3>
+              <p class="text-sm text-gray-400 line-clamp-2 leading-relaxed font-normal">${post.excerpt}</p>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-2 border-t border-gray-950 flex justify-between items-center text-xs font-bold text-[#71826a]">
+            <span>READ DROP <i class="fas fa-chevron-right text-[10px] ml-0.5"></i></span>
+            <div class="text-gray-600 flex space-x-2 text-sm">
+              <i class="fab fa-tiktok hover:text-white transition"></i>
+              <i class="fab fa-youtube hover:text-white transition"></i>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Navigation Active UI Toggles
+    function filterCategory(cat) {
+      currentCategory = cat;
+      showGridView();
+      
+      document.querySelectorAll(".nav-btn").forEach(btn => {
+        if(btn.innerText === cat) {
+          btn.className = "nav-btn px-3 py-2 rounded text-white bg-[#1a1a22]";
+        } else {
+          btn.className = "nav-btn px-3 py-2 rounded hover:text-white transition text-gray-400";
+        }
+      });
+
+      document.getElementById("category-title").innerText = cat === "All" ? "LATEST DROP STREAM" : `${cat} UPDATES`;
+      renderGrid(cat);
+    }
+
+    // View Routing
+    function showDetailView(id) {
+      const post = blogDatabase.find(p => p.id === id);
+      if(!post) return;
+
+      document.getElementById("grid-view").classList.add("hidden");
+      document.getElementById("crew-section").classList.add("hidden");
+      document.getElementById("detail-view").classList.remove("hidden");
+      window.scrollTo({top: 0, behavior: 'smooth'});
+
+      // Populate View Components
+      document.getElementById("detail-category").innerText = post.category;
+      document.getElementById("detail-date").innerText = post.date;
+      document.getElementById("detail-title").innerText = post.title;
+      document.getElementById("detail-image").src = post.image;
+      document.getElementById("detail-wt-take").innerText = `"${post.wtTake}"`;
+
+      // Source Link Check
+      const sourceBtn = document.getElementById("detail-source");
+      if(post.sourceUrl) {
+        sourceBtn.href = post.sourceUrl;
+        sourceBtn.innerHTML = `<i class="fas fa-external-link-alt mr-1"></i>Via ${post.source}`;
+        sourceBtn.classList.remove("hidden");
+      } else {
+        sourceBtn.classList.add("hidden");
+      }
+
+      // Populate Bullet points
+      const bulletsCont = document.getElementById("detail-bullets");
+      bulletsCont.innerHTML = "";
+      post.bulletPoints.forEach(bp => {
+        const li = document.createElement("li");
+        li.className = "flex items-start space-x-2.5";
+        li.innerHTML = `<i class="fas fa-bolt text-[#71826a] text-xs mt-1 flex-shrink-0"></i> <span>${bp}</span>`;
+        bulletsCont.appendChild(li);
+      });
+
+      // Populate Body paragraphs
+      const bodyCont = document.getElementById("detail-body-text");
+      bodyCont.innerHTML = `<p class="font-normal">${post.bodyText}</p>`;
+    }
+
+    function showGridView() {
+      document.getElementById("detail-view").classList.add("hidden");
+      document.getElementById("grid-view").classList.remove("hidden");
+      document.getElementById("crew-section").classList.remove("hidden");
+    }
+
+    // Global Interactive Functions
+    function scrollToCrew() {
+      showGridView();
+      document.getElementById("crew-section").scrollIntoView({behavior: 'smooth'});
+    }
+    function openApplication() { document.getElementById("app-modal").classList.remove("hidden"); }
+    function closeApplication() { document.getElementById("app-modal").classList.add("hidden"); }
+    function submitApp(e) {
+      e.preventDefault();
+      alert("Application successfully encrypted and transmitted to WhoTookThis database. Stay alert on Discord.");
+      closeApplication();
+    }
+
+    // Init Engine
+    document.getElementById("nav-logo").addEventListener("click", (e) => { e.preventDefault(); filterCategory("All"); });
+    renderGrid();
+
+    // Init Netlify Identity check
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => { document.location.href = "/admin/"; });
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+backend:
+  name: github
+  repo: YOUR_GITHUB_USERNAME/WhoTookThis-Website
+  branch: main
+
+media_folder: "images"
+public_folder: "images"
+
+collections:
+  - name: "posts"
+    label: "WhoTookThis Blog Drops"
+    folder: "posts"
+    create: true
+    slug: "{{slug}}"
+    format: "json"
+    fields:
+      - {label: "Unique ID", name: "id", widget: "string"}
+      - {label: "Headline Title", name: "title", widget: "string"}
+      - {label: "Category", name: "category", widget: "select", options: ["News", "Movie Reviews", "Podcast Clips", "Rumors"]}
+      - {label: "Thumbnail Image", name: "image", widget: "image"}
+      - {label: "Publish Date", name: "date", widget: "string"}
+      - {label: "Source Publication", name: "source", widget: "string"}
+      - {label: "Source URL", name: "sourceUrl", widget: "string", required: false}
+      - {label: "Short Excerpt Summary", name: "excerpt", widget: "text"}
+      - {label: "Your WT Take Highlight", name: "wtTake", widget: "string"}
+      - {label: "Snappy Bullet Points", name: "bulletPoints", widget: "list", required: false}
+      - {label: "Detailed Main Story Body", name: "bodyText", widget: "markdown"}
