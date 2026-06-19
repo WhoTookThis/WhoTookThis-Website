@@ -8,7 +8,7 @@ public_folder: "images"
 collections:
   - name: "blog"
     label: "WhoTookThis Blog Drops"
-    folder: "content/blog"
+    folder: "posts"
     create: true
     slug: "{{slug}}"
     format: "json"
