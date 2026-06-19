@@ -189,62 +189,32 @@
 
   <!-- DYNAMIC CONTENT SCRIPT ENGINE -->
   <script>
-    // Mocking the Data Structure coming directly from Decap CMS JSON/Markdown files
-    const blogDatabase = [
-      {
-        id: "1",
-        title: "Why Obsession is dominating the Box Office",
-        category: "Movie Reviews",
-        image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800",
-        date: "June 18, 2026",
-        source: "Variety",
-        sourceUrl: "https://variety.com",
-        excerpt: "No one predicted this micro-budget psychological horror thriller would clean house, but word-of-mouth on TikTok is completely undefeated.",
-        wtTake: "Traditional studio tracking models are completely dead. If you hook a 19-year-old on TikTok with a wild sound bite or an insane twist clip, they will show up to theaters in droves. Obsession is phenomenal, chaotic filmmaking.",
-        bulletPoints: [
-          "Beats out major studio tentpoles with a tiny $4.5M production budget.",
-          "Viral 'Don't Look Away' trends on short-form social media generated instant free marketing.",
-          "Targeting audiences who want fast-paced, unpredictable theater trips rather than 3-hour blockbusters."
-        ],
-        bodyText: "The theatrical landscape just took a massive reality check. While massive franchises struggle to make back their astronomical VFX budgets, a lean, mean, tension-fueled ride called Obsession just locked down the number one spot at the box office. The secret sauce? Pure audience obsession. It wasn't built on legacy intellectual property or massive billboard campaigns. Instead, the directors targeted exact behavioral triggers that make things move on phone screens—unsettling cinematography, sound loops that demand reactions, and a final third that leaves you looking around the theater. It's fast, funny, and terrifying."
-      },
-      {
-        id: "2",
-        title: "Insider Rumours Surrounding The Batman Part 2",
-        category: "Rumors",
-        image: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?auto=format&fit=crop&q=80&w=800",
-        date: "June 15, 2026",
-        source: "The Hollywood Reporter",
-        sourceUrl: "https://hollywoodreporter.com",
-        excerpt: "Production leaks indicate Matt Reeves is cooking an incredibly grounded detective noir that shifts heavy emphasis onto Gotham's lower-tier underworld clans.",
-        wtTake: "Give me all of this right now. We don't need world-ending lasers; we need Robert Pattinson tracking cryptic clues through rain-soaked Gotham alleyways like a true unhinged detective. Keep it gritty, keep it raw.",
-        bulletPoints: [
-          "Script tweaks focus heavily on developing the corrupt political voids left after the flood.",
-          "Rumored villain tracks lean closer to street-level psychological rogues rather than theatrical supers.",
-          "Cinematography styles plan to push low-light digital film techniques to extreme limits."
-        ],
-        bodyText: "Rumors out of the production office hint that the sequel's script is undergoing a massive tightening phase to trim fat and amplify the raw, dirty crime-noir elements that made the original standalone standout. Insiders state that instead of escalating to giant comic-book tropes, the script dives face-first into the chaotic turf wars tearing Gotham's families apart. Expect heavy psychological pacing, gritty set pieces, and an absolute masterclass in atmosphere."
-      },
-      {
-        id: "3",
-        title: "Toy Story 5: Review",
-        category: "Movie Reviews",
-        image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=800",
-        date: "June 10, 2026",
-        source: "Deadline",
-        sourceUrl: "https://deadline.com",
-        excerpt: "Can Pixar recapture the pure cinematic magic for a fifth round, or are we staring down corporate fatigue?",
-        wtTake: "Look, we all said Toy Story 4 was unnecessary, and then it ripped our hearts out anyway. If Pixar has an organic angle to look at how tech alters childhood play dynamics, I'm seated. Don't bet against the toys.",
-        bulletPoints: [
-          "Deals with modern childhood moving away from physical plastic to digital twin simulations.",
-          "Classic voice cast anchors the emotional weight beautifully.",
-          "Visual animation standards are reportedly pushing photorealism benchmarks."
-        ],
-        bodyText: "Walking into a fifth installment of an iconic franchise always comes with heavy skepticism. Is it a cash grab, or is there a genuine narrative reason to reopen the toy box? Thankfully, the creative teams focused directly on a modern struggle: how physical toys survive in a world ruled by smart devices and instant screens. It's funny, deeply self-aware, and packs that classic third-act punch that will make grown adults weep in public."
-      }
-    ];
-
+    let blogDatabase = [];
     let currentCategory = "All";
+
+    // AUTOMATED DATA LOADER: Dynamically fetches your articles from the posts folder
+    async function loadArticles() {
+      try {
+        // Netlify compiles your directory. We fetch the list of your written JSON files here:
+        // Adjust the files array if you add more articles manually or via CMS
+        const postFiles = ['supergirl-early-reactions.json']; 
+        
+        const fetchPromises = postFiles.map(file => 
+          fetch(`/posts/${file}`).then(res => res.ok ? res.json() : null)
+        );
+        
+        const fetchedPosts = await fetchPromises;
+        blogDatabase = fetchedPosts.filter(post => post !== null);
+        
+        // Sort articles so the newest drop is always first
+        blogDatabase.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        // Render the screen
+        renderGrid();
+      } catch (error) {
+        console.error("Error fetching dynamic drops from posts repository:", error);
+      }
+    }
 
     // Inject and filter grid items
     function renderGrid(filter = "All") {
@@ -253,6 +223,11 @@
       
       const filtered = filter === "All" ? blogDatabase : blogDatabase.filter(p => p.category === filter);
       document.getElementById("item-count").innerText = `${filtered.length} Drop${filtered.length === 1 ? '' : 's'} Available`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 font-medium">No explosive drops found in this category yet. Stay alert.</div>`;
+        return;
+      }
 
       filtered.forEach((post, idx) => {
         const isMainFeature = filter === "All" && idx === 0;
@@ -264,14 +239,13 @@
         card.innerHTML = `
           <div>
             <div class="relative aspect-video w-full overflow-hidden bg-gray-900">
-              <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
+              <img src="${post.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800'}" alt="${post.title}" class="w-full h-full object-cover hover:scale-105 transition duration-500">
               <span class="absolute top-3 left-3 bg-[#71826a] text-black text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">${post.category}</span>
             </div>
             <div class="p-5 space-y-2">
               <div class="text-[11px] font-bold text-gray-500 flex items-center space-x-2">
                 <span>${post.date}</span>
-                <span>&bull;</span>
-                <span class="text-gray-400">Via ${post.source}</span>
+                ${post.source ? `<span>&bull;</span> <span class="text-gray-400">Via ${post.source}</span>` : ''}
               </div>
               <h3 class="${isMainFeature ? 'text-2xl lg:text-3xl' : 'text-lg'} font-black text-white tracking-tight leading-tight hover:text-[#71826a] transition">${post.title}</h3>
               <p class="text-sm text-gray-400 line-clamp-2 leading-relaxed font-normal">${post.excerpt}</p>
@@ -320,14 +294,14 @@
       document.getElementById("detail-category").innerText = post.category;
       document.getElementById("detail-date").innerText = post.date;
       document.getElementById("detail-title").innerText = post.title;
-      document.getElementById("detail-image").src = post.image;
+      document.getElementById("detail-image").src = post.image || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800';
       document.getElementById("detail-wt-take").innerText = `"${post.wtTake}"`;
 
       // Source Link Check
       const sourceBtn = document.getElementById("detail-source");
       if(post.sourceUrl) {
         sourceBtn.href = post.sourceUrl;
-        sourceBtn.innerHTML = `<i class="fas fa-external-link-alt mr-1"></i>Via ${post.source}`;
+        sourceBtn.innerHTML = `<i class="fas fa-external-link-alt mr-1"></i>Via ${post.source || 'Source'}`;
         sourceBtn.classList.remove("hidden");
       } else {
         sourceBtn.classList.add("hidden");
@@ -336,16 +310,21 @@
       // Populate Bullet points
       const bulletsCont = document.getElementById("detail-bullets");
       bulletsCont.innerHTML = "";
-      post.bulletPoints.forEach(bp => {
-        const li = document.createElement("li");
-        li.className = "flex items-start space-x-2.5";
-        li.innerHTML = `<i class="fas fa-bolt text-[#71826a] text-xs mt-1 flex-shrink-0"></i> <span>${bp}</span>`;
-        bulletsCont.appendChild(li);
-      });
+      if(post.bulletPoints && post.bulletPoints.length > 0) {
+        bulletsCont.classList.remove("hidden");
+        post.bulletPoints.forEach(bp => {
+          const li = document.createElement("li");
+          li.className = "flex items-start space-x-2.5";
+          li.innerHTML = `<i class="fas fa-bolt text-[#71826a] text-xs mt-1 flex-shrink-0"></i> <span>${bp}</span>`;
+          bulletsCont.appendChild(li);
+        });
+      } else {
+        bulletsCont.classList.add("hidden");
+      }
 
       // Populate Body paragraphs
       const bodyCont = document.getElementById("detail-body-text");
-      bodyCont.innerHTML = `<p class="font-normal">${post.bodyText}</p>`;
+      bodyCont.innerHTML = `<p class="font-normal text-gray-300 leading-relaxed">${post.bodyText}</p>`;
     }
 
     function showGridView() {
@@ -369,7 +348,9 @@
 
     // Init Engine
     document.getElementById("nav-logo").addEventListener("click", (e) => { e.preventDefault(); filterCategory("All"); });
-    renderGrid();
+    
+    // Fire up dynamic loader
+    loadArticles();
 
     // Init Netlify Identity check
     if (window.netlifyIdentity) {
