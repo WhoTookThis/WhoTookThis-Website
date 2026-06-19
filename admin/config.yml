@@ -22,5 +22,5 @@ collections:
       - {label: "Source URL (Optional)", name: "sourceUrl", widget: "string", required: false}
       - {label: "Short Excerpt Summary", name: "excerpt", widget: "text"}
       - {label: "Your WT Take Highlight", name: "wtTake", widget: "text"}
-      - {label: "Snappy Bullet Points (Optional)", name: "bullets", widget: "list", required: false}
+      - {label: "Snappy Bullet Points (Optional)", name: "bulletPoints", widget: "list", required: false}
       - {label: "Detailed Main Story Body", name: "bodyText", widget: "markdown"}
